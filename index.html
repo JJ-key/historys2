@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Human Cost of Powerful Weapons — U.S. History Fair</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:    #c0392b;
+      --red-lt: #e74c3c;
+      --gold:   #d4a843;
+      --white:  #f0ede8;
+      --dim:    #a09a94;
+      --bg:     #0e0c0b;
+      --bg2:    #141210;
+      --bg3:    #1a1714;
+      --border: rgba(255,255,255,0.07);
+      --slide-dur: 700ms;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Georgia', serif;
+      background: var(--bg);
+      color: var(--white);
+    }
+
+    /* ── SLIDE CONTAINER ── */
+    #deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 6vw;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(40px);
+      transition:
+        opacity var(--slide-dur) cubic-bezier(.4,0,.2,1),
+        transform var(--slide-dur) cubic-bezier(.4,0,.2,1);
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+    .slide.exit-up {
+      opacity: 0;
+      transform: translateY(-40px);
+    }
+
+    /* ── SLIDE INNER LAYOUT ── */
+    .slide-inner {
+      max-width: 1000px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 1.6rem;
+    }
+
+    /* ── ANIMATED CHILDREN ── */
+    .slide.active .anim {
+      animation: fadeUp 0.6s cubic-bezier(.4,0,.2,1) both;
+    }
+    .slide.active .anim:nth-child(1) { animation-delay: 0.05s; }
+    .slide.active .anim:nth-child(2) { animation-delay: 0.18s; }
+    .slide.active .anim:nth-child(3) { animation-delay: 0.30s; }
+    .slide.active .anim:nth-child(4) { animation-delay: 0.42s; }
+    .slide.active .anim:nth-child(5) { animation-delay: 0.54s; }
+    .slide.active .anim:nth-child(6) { animation-delay: 0.66s; }
+    .slide.active .anim:nth-child(7) { animation-delay: 0.78s; }
+    .slide.active .anim:nth-child(8) { animation-delay: 0.90s; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── TYPOGRAPHY ── */
+    .label {
+      font-size: 0.72rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-family: 'Arial', sans-serif;
+      font-weight: 700;
+    }
+    .label.red { color: var(--red-lt); }
+    .label.dim  { color: var(--dim); }
+
+    h1 {
+      font-size: clamp(2rem, 5.5vw, 4rem);
+      line-height: 1.1;
+      color: var(--white);
+      font-weight: 700;
+    }
+    h2 {
+      font-size: clamp(1.5rem, 3.5vw, 2.6rem);
+      line-height: 1.15;
+      color: var(--white);
+      font-weight: 700;
+    }
+    h3 {
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      line-height: 1.3;
+      color: var(--gold);
+      font-family: 'Arial', sans-serif;
+      font-weight: 600;
+    }
+    p {
+      font-size: clamp(0.95rem, 1.5vw, 1.15rem);
+      line-height: 1.75;
+      color: var(--dim);
+      max-width: 72ch;
+    }
+    p strong { color: var(--white); font-weight: 600; }
+    p.lead {
+      font-size: clamp(1.05rem, 1.8vw, 1.3rem);
+      color: var(--white);
+      line-height: 1.65;
+    }
+
+    /* ── DIVIDER ── */
+    .rule {
+      width: 56px;
+      height: 2px;
+      background: var(--red);
+    }
+    .rule.gold { background: var(--gold); }
+
+    /* ── STAT BLOCKS ── */
+    .stats-row {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .stat {
+      flex: 1 1 180px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--red);
+      padding: 1.2rem 1.4rem;
+      border-radius: 2px;
+    }
+    .stat.gold-top { border-top-color: var(--gold); }
+    .stat-num {
+      font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+      font-weight: 700;
+      color: var(--red-lt);
+      line-height: 1;
+      font-family: 'Arial', sans-serif;
+    }
+    .stat.gold-top .stat-num { color: var(--gold); }
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--dim);
+      margin-top: 0.35rem;
+      font-family: 'Arial', sans-serif;
+      line-height: 1.4;
+    }
+
+    /* ── QUOTE BLOCK ── */
+    .callout {
+      border-left: 3px solid var(--red);
+      padding: 0.9rem 1.4rem;
+      background: rgba(192,57,43,0.07);
+      border-radius: 0 2px 2px 0;
+    }
+    .callout p { color: var(--white); font-style: italic; }
+    .callout.gold-accent { border-left-color: var(--gold); background: rgba(212,168,67,0.07); }
+    .callout.gold-accent p { color: var(--white); }
+
+    /* ── ERA BADGE ── */
+    .era-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 2px;
+    }
+    .era-num {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--gold);
+      font-family: 'Arial', sans-serif;
+      line-height: 1;
+    }
+    .era-title {
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--dim);
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* ── POINT LIST ── */
+    .points {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .points li {
+      display: flex;
+      gap: 0.9rem;
+      align-items: flex-start;
+      font-size: clamp(0.92rem, 1.45vw, 1.08rem);
+      color: var(--dim);
+      line-height: 1.65;
+    }
+    .points li::before {
+      content: '';
+      display: block;
+      min-width: 6px;
+      height: 6px;
+      margin-top: 0.5em;
+      background: var(--red);
+      border-radius: 50%;
+    }
+    .points li strong { color: var(--white); }
+    .points.gold-dots li::before { background: var(--gold); }
+
+    /* ── TWO-COL ── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+    @media (max-width: 680px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 1.3rem 1.5rem;
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+    .panel h3 { font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase; }
+    .panel p  { font-size: 0.93rem; }
+
+    /* ── ROADMAP TIMELINE ── */
+    .roadmap {
+      display: flex;
+      gap: 0;
+      align-items: stretch;
+    }
+    .road-step {
+      flex: 1;
+      position: relative;
+      padding: 1rem 1.2rem;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+    .road-step + .road-step {
+      border-left: none;
+    }
+    .road-step:first-child { border-radius: 2px 0 0 2px; }
+    .road-step:last-child  { border-radius: 0 2px 2px 0; }
+    .road-num {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--gold);
+      font-family: 'Arial', sans-serif;
+      line-height: 1;
+    }
+    .road-label {
+      font-size: 0.78rem;
+      color: var(--dim);
+      margin-top: 0.35rem;
+      font-family: 'Arial', sans-serif;
+      line-height: 1.4;
+    }
+    .road-step.active-era {
+      border-top: 2px solid var(--gold);
+    }
+
+    /* ── SOURCE ── */
+    .source-line {
+      font-size: 0.74rem;
+      color: rgba(160,154,148,0.55);
+      font-family: 'Arial', sans-serif;
+      border-top: 1px solid var(--border);
+      padding-top: 0.6rem;
+      margin-top: 0.3rem;
+    }
+    .source-line a {
+      color: rgba(160,154,148,0.55);
+      text-decoration: none;
+    }
+    .source-line a:hover { color: var(--dim); }
+
+    /* ── THESIS BOX ── */
+    .thesis-box {
+      background: var(--bg3);
+      border: 1px solid rgba(192,57,43,0.35);
+      border-left: 3px solid var(--red);
+      padding: 1.4rem 1.8rem;
+      border-radius: 0 2px 2px 0;
+    }
+    .thesis-box p {
+      color: var(--white);
+      font-size: clamp(0.95rem, 1.5vw, 1.12rem);
+      line-height: 1.75;
+      max-width: 100%;
+    }
+
+    /* ── CONCLUSION POINTS ── */
+    .conclusion-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+    }
+    @media (max-width: 680px) {
+      .conclusion-grid { grid-template-columns: 1fr; }
+    }
+    .conc-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-top: 2px solid var(--gold);
+      padding: 1rem 1.2rem;
+      border-radius: 2px;
+    }
+    .conc-card-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-family: 'Arial', sans-serif;
+      margin-bottom: 0.4rem;
+    }
+    .conc-card p {
+      font-size: 0.9rem;
+      color: var(--dim);
+    }
+    .conc-card p strong { color: var(--white); }
+
+    /* ── CTA ── */
+    .cta-box {
+      background: linear-gradient(135deg, rgba(192,57,43,0.15), rgba(212,168,67,0.08));
+      border: 1px solid rgba(192,57,43,0.4);
+      padding: 1.6rem 2rem;
+      border-radius: 2px;
+      text-align: center;
+    }
+    .cta-box p {
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      color: var(--white);
+      max-width: 100%;
+      line-height: 1.7;
+    }
+
+    /* ── BACKGROUND ACCENTS ── */
+    .slide::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(192,57,43,0.04) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── SLIDE-SPECIFIC COLORS ── */
+    #s1::before { background: radial-gradient(ellipse 70% 60% at 70% 30%, rgba(212,168,67,0.05) 0%, transparent 70%); }
+    #s2::before { background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(192,57,43,0.06) 0%, transparent 70%); }
+    #s3::before { background: radial-gradient(ellipse 60% 60% at 10% 80%, rgba(192,57,43,0.05) 0%, transparent 70%); }
+    #s4::before { background: radial-gradient(ellipse 60% 60% at 80% 20%, rgba(212,168,67,0.04) 0%, transparent 70%); }
+    #s5::before { background: radial-gradient(ellipse 60% 60% at 20% 30%, rgba(212,168,67,0.05) 0%, transparent 70%); }
+    #s6::before { background: radial-gradient(ellipse 70% 60% at 50% 80%, rgba(192,57,43,0.06) 0%, transparent 70%); }
+
+    /* ── NAV DOTS ── */
+    #nav-dots {
+      position: fixed;
+      right: 1.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      z-index: 100;
+    }
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .dot.current {
+      background: var(--gold);
+      transform: scale(1.4);
+    }
+    .dot:hover:not(.current) { background: rgba(255,255,255,0.45); }
+
+    /* ── ARROW BUTTONS ── */
+    #nav-arrows {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 1rem;
+      z-index: 100;
+    }
+    .arrow-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(14,12,11,0.7);
+      color: var(--white);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.25s, border-color 0.25s, transform 0.2s;
+      backdrop-filter: blur(8px);
+    }
+    .arrow-btn:hover { background: rgba(192,57,43,0.35); border-color: var(--red); transform: scale(1.08); }
+    .arrow-btn:disabled { opacity: 0.2; pointer-events: none; }
+
+    /* ── SLIDE COUNTER ── */
+    #slide-counter {
+      position: fixed;
+      bottom: 2.1rem;
+      right: 1.8rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      font-family: 'Arial', sans-serif;
+      color: rgba(160,154,148,0.4);
+      z-index: 100;
+    }
+
+    /* ── PROGRESS BAR ── */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--red), var(--gold));
+      transition: width 0.5s cubic-bezier(.4,0,.2,1);
+      z-index: 200;
+    }
+
+    /* ── QUESTION INTRO ── */
+    .question-block {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      padding: 1.2rem 1.6rem;
+      border-radius: 2px;
+      position: relative;
+    }
+    .question-block::before {
+      content: '"';
+      position: absolute;
+      top: -0.5rem;
+      left: 1rem;
+      font-size: 3rem;
+      color: var(--gold);
+      opacity: 0.3;
+      line-height: 1;
+      font-family: Georgia, serif;
+    }
+    .question-block p {
+      font-size: clamp(1rem, 1.7vw, 1.25rem);
+      color: var(--white);
+      font-style: italic;
+      line-height: 1.7;
+      max-width: 100%;
+      padding-left: 1rem;
+    }
+
+    /* ── SCROLLABLE CONTENT ── */
+    .slide-inner.scrollable {
+      max-height: calc(100vh - 8rem);
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255,255,255,0.1) transparent;
+    }
+    .slide-inner.scrollable::-webkit-scrollbar { width: 4px; }
+    .slide-inner.scrollable::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 600px) {
+      .slide { padding: 2rem 1.4rem 5rem; }
+      #nav-dots { display: none; }
+      .roadmap { flex-direction: column; }
+      .road-step + .road-step { border-left: 1px solid var(--border); border-top: none; }
+      .road-step:first-child { border-radius: 2px 2px 0 0; }
+      .road-step:last-child  { border-radius: 0 0 2px 2px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- NAV DOTS -->
+<div id="nav-dots">
+  <div class="dot" data-slide="0" title="Introduction"></div>
+  <div class="dot" data-slide="1" title="Era 1: Atomic Bombs"></div>
+  <div class="dot" data-slide="2" title="Era 2: Vietnam"></div>
+  <div class="dot" data-slide="3" title="Era 3: Drone Strikes"></div>
+  <div class="dot" data-slide="4" title="Counterargument"></div>
+  <div class="dot" data-slide="5" title="Conclusion"></div>
+</div>
+
+<!-- ARROW NAVIGATION -->
+<div id="nav-arrows">
+  <button class="arrow-btn" id="btn-prev" aria-label="Previous slide">&#8592;</button>
+  <button class="arrow-btn" id="btn-next" aria-label="Next slide">&#8594;</button>
+</div>
+
+<!-- SLIDE COUNTER -->
+<div id="slide-counter">1 / 6</div>
+
+<!-- ═══════════════════════════════════════════
+     SLIDE 1 — INTRODUCTION
+═══════════════════════════════════════════ -->
+<div id="deck">
+
+  <div class="slide active" id="s1">
+    <div class="slide-inner scrollable">
+
+      <div class="anim">
+        <span class="label">History Fair Presentation</span>
+      </div>
+
+      <div class="anim">
+        <div class="question-block">
+          <p>Should the United States think about how many people might get hurt — the human cost — when using powerful weapons to end a war?</p>
+        </div>
+      </div>
+
+      <div class="anim">
+        <h1>The Price of Power</h1>
+      </div>
+
+      <div class="anim">
+        <div class="rule"></div>
+      </div>
+
+      <div class="anim">
+        <p class="lead">Throughout history, the United States has used some of the most powerful weapons ever created. But what happens to the ordinary people — the civilians, the families, the children — when those weapons are used? This presentation argues that the U.S. has repeatedly failed to ask that question.</p>
+      </div>
+
+      <div class="anim">
+        <div class="thesis-box">
+          <p><strong>Our Thesis:</strong> The U.S. government failed to consider the human cost when using powerful weapons to end wars, and should start doing so — because these weapons cause permanent environmental damage, devastate civilian communities, waste American resources, and damage the global reputation of the United States.</p>
+        </div>
+      </div>
+
+      <div class="anim">
+        <p>We will examine three different periods in history to prove this pattern is real and consistent.</p>
+      </div>
+
+      <div class="anim">
+        <div class="roadmap">
+          <div class="road-step">
+            <div class="road-num">01</div>
+            <div class="road-label">Atomic Bombs<br/>1914–1945</div>
+          </div>
+          <div class="road-step">
+            <div class="road-num">02</div>
+            <div class="road-label">Agent Orange<br/>1946–1990</div>
+          </div>
+          <div class="road-step">
+            <div class="road-num">03</div>
+            <div class="road-label">Drone Strikes<br/>1990–Present</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 2 — ERA 1: ATOMIC BOMBS
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="s2">
+    <div class="slide-inner scrollable">
+
+      <div class="anim">
+        <div class="era-badge">
+          <div class="era-num">01</div>
+          <div class="era-title">Era One &nbsp;|&nbsp; 1914 – 1945</div>
+        </div>
+      </div>
+
+      <div class="anim">
+        <h2>The Atomic Bombs of Hiroshima and Nagasaki</h2>
+      </div>
+
+      <div class="anim">
+        <div class="rule"></div>
+      </div>
+
+      <div class="anim">
+        <p>In August 1945, the United States dropped two atomic bombs on the Japanese cities of Hiroshima and Nagasaki. These were the most destructive single weapons ever used in warfare. The U.S. government said the bombs were necessary to end World War II quickly and avoid an invasion that might kill even more people. But the numbers tell a different story.</p>
+      </div>
+
+      <div class="anim">
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-num">200,000</div>
+            <div class="stat-label">People killed — most estimates range from 140,000 to 200,000</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">90%</div>
+            <div class="stat-label">Of the dead were civilians — not soldiers</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">38,000</div>
+            <div class="stat-label">Children killed in the bombings</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="anim">
+        <ul class="points">
+          <li><strong>The cities were destroyed instantly.</strong> Hiroshima and Nagasaki were wiped off the map in seconds.</li>
+          <li><strong>Radiation kept killing long after the bombs.</strong> Survivors developed cancer, leukemia, and other diseases for decades.</li>
+          <li><strong>The environment was permanently damaged.</strong> The radiation altered the land and the health of generations.</li>
+          <li><strong>The goal was military, but the victims were civilian.</strong> With 90% civilian casualties, the human cost was enormous relative to any military objective.</li>
+        </ul>
+      </div>
+
+      <div class="anim">
+        <div class="callout">
+          <p>"The bombing did not distinguish between soldiers and civilians. The human cost was immediate, massive, and permanent."</p>
+        </div>
+      </div>
+
+      <div class="anim">
+        <div class="source-line">
+          Sources: International Campaign to Abolish Nuclear Weapons (ICAN) — <a href="https://www.icanw.org/hiroshima_and_nagasaki_bombings" target="_blank" rel="noopener">icanw.org</a> &nbsp;|&nbsp; Britannica — <a href="https://www.britannica.com/topic/Trumans-decision-to-use-the-bomb-712569" target="_blank" rel="noopener">britannica.com</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 3 — ERA 2: VIETNAM
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="s3">
+    <div class="slide-inner scrollable">
+
+      <div class="anim">
+        <div class="era-badge">
+          <div class="era-num">02</div>
+          <div class="era-title">Era Two &nbsp;|&nbsp; 1946 – 1990</div>
+        </div>
+      </div>
+
+      <div class="anim">
+        <h2>Agent Orange and Napalm in Vietnam</h2>
+      </div>
+
+      <div class="anim">
+        <div class="rule"></div>
+      </div>
+
+      <div class="anim">
+        <p>During the Vietnam War, the United States did not just use guns and bombs. It used two chemical weapons that caused suffering long after the war ended — napalm and Agent Orange. These weapons show that the human cost of war does not stop when the fighting stops.</p>
+      </div>
+
+      <div class="anim">
+        <div class="two-col">
+          <div class="panel">
+            <h3>Napalm</h3>
+            <p>A burning chemical that sticks to skin. It burns at up to <strong>2,200 degrees Fahrenheit</strong> — hot enough to melt metal. When dropped on villages, it burned everything and everyone in its path, including civilians.</p>
+          </div>
+          <div class="panel">
+            <h3>Agent Orange</h3>
+            <p>A toxic chemical sprayed across <strong>5 million acres</strong> of Vietnamese land. It was used to destroy forests and crops so enemy forces could not hide. But it also destroyed the land that civilians lived on — and their bodies.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="anim">
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-num">3 million+</div>
+            <div class="stat-label">Vietnamese civilians became victims of Agent Orange</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">5 million</div>
+            <div class="stat-label">Acres of land permanently contaminated</div>
+          </div>
+          <div class="stat gold-top">
+            <div class="stat-num">Generations</div>
+            <div class="stat-label">Children born after the war still suffer birth defects today</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="anim">
+        <ul class="points">
+          <li>Agent Orange caused <strong>cancer, leukemia, and severe birth defects</strong> — not just in those exposed, but in their children and grandchildren.</li>
+          <li>The land itself was permanently damaged. Forests never fully recovered. Soil contamination persisted for decades.</li>
+          <li>This is a critical point: <strong>the human cost did not end when the war ended.</strong> It lasted generations.</li>
+        </ul>
+      </div>
+
+      <div class="anim">
+        <div class="source-line">
+          Source: National Library of Medicine / NCBI — <a href="https://www.ncbi.nlm.nih.gov/books/NBK236347/" target="_blank" rel="noopener">ncbi.nlm.nih.gov</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 4 — ERA 3: DRONE STRIKES
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="s4">
+    <div class="slide-inner scrollable">
+
+      <div class="anim">
+        <div class="era-badge">
+          <div class="era-num">03</div>
+          <div class="era-title">Era Three &nbsp;|&nbsp; 1990 – Present</div>
+        </div>
+      </div>
+
+      <div class="anim">
+        <h2>Drone Strikes During the War on Terror</h2>
+      </div>
+
+      <div class="anim">
+        <div class="rule"></div>
+      </div>
+
+      <div class="anim">
+        <p>After the September 11, 2001 terrorist attacks, the United States launched the War on Terror. To target terrorist leaders in remote areas of Afghanistan, Pakistan, Yemen, Somalia, and Iraq, the U.S. military used drone strikes — unmanned aircraft that fire missiles from thousands of feet in the air. The U.S. said these weapons were precise. The data disagrees.</p>
+      </div>
+
+      <div class="anim">
+        <div class="stats-row">
+          <div class="stat">
+            <div class="stat-num">408,749</div>
+            <div class="stat-label">Minimum civilian deaths during the War on Terror</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">2%</div>
+            <div class="stat-label">Of drone strike victims were actual high-level militant leaders</div>
+          </div>
+          <div class="stat gold-top">
+            <div class="stat-num">98%</div>
+            <div class="stat-num" style="font-size:1rem; color: var(--dim); font-weight: 400; margin-top: 0.2rem;">were not the intended high-value target</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="anim">
+        <ul class="points">
+          <li><strong>Even "precise" modern weapons kill civilians.</strong> A 2% hit rate on intended targets means 98% of victims were ordinary people.</li>
+          <li>Drone strikes hit <strong>wedding parties, funerals, homes, and markets</strong> — not just military compounds.</li>
+          <li>Communities in these regions live in constant fear, suffering psychological damage even without physical injury.</li>
+          <li>The damage to U.S. reputation globally has made it <strong>harder to build alliances</strong> and win trust in the regions where America is trying to fight terrorism.</li>
+        </ul>
+      </div>
+
+      <div class="anim">
+        <div class="callout">
+          <p>Modern technology did not solve the problem. Even in the 21st century, the U.S. continued to pay a massive human cost that it did not fully account for.</p>
+        </div>
+      </div>
+
+      <div class="anim">
+        <div class="source-line">
+          Source: Costs of War Project, Brown University — <a href="https://costsofwar.watson.brown.edu/costs/human/civilians-killed-displaced" target="_blank" rel="noopener">costsofwar.watson.brown.edu</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 5 — COUNTERARGUMENT
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="s5">
+    <div class="slide-inner scrollable">
+
+      <div class="anim">
+        <span class="label dim">Addressing the Other Side</span>
+      </div>
+
+      <div class="anim">
+        <h2>What About the Argument That These Weapons Saved Lives?</h2>
+      </div>
+
+      <div class="anim">
+        <div class="rule gold"></div>
+      </div>
+
+      <div class="anim">
+        <p class="lead">It is important to take this counterargument seriously. Some people argue that these powerful weapons were necessary — that they ended wars faster and ultimately saved more lives than they cost.</p>
+      </div>
+
+      <div class="anim">
+        <div class="two-col">
+          <div class="panel">
+            <h3>The Counterargument</h3>
+            <p>The U.S. argued that dropping atomic bombs on Japan prevented a land invasion that military planners estimated could have killed <strong>500,000 to 1,000,000 American soldiers</strong> and millions of Japanese. By that logic, the bomb saved more lives than it took.</p>
+            <br/>
+            <p>Similarly, drone strikes were designed to eliminate terrorist leaders with less risk to American soldiers than traditional ground operations.</p>
+          </div>
+          <div class="panel">
+            <h3>Why This Does Not Hold Up</h3>
+            <p>Even if the intention was to save lives overall, the evidence shows that <strong>the actual human cost on civilians was massive and long-lasting</strong> in every case. Good intentions do not undo 200,000 deaths, three million poisoned civilians, or 400,000+ civilian war deaths.</p>
+            <br/>
+            <p>The argument assumes there were no other options. But history shows that better planning — and serious consideration of the human cost — could have reduced civilian casualties significantly.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="anim">
+        <div class="callout gold-accent">
+          <p>The question is not whether the U.S. had bad intentions. The question is whether the U.S. gave serious thought to how many ordinary people would be hurt — and whether it could have done better. The evidence shows it did not, and it could have.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       SLIDE 6 — CONCLUSION
+  ═══════════════════════════════════════════ -->
+  <div class="slide" id="s6">
+    <div class="slide-inner scrollable">
+
+      <div class="anim">
+        <span class="label">Conclusion</span>
+      </div>
+
+      <div class="anim">
+        <h2>A Pattern Across History — And a Call for Change</h2>
+      </div>
+
+      <div class="anim">
+        <div class="rule"></div>
+      </div>
+
+      <div class="anim">
+        <div class="thesis-box">
+          <p><strong>Restated Thesis:</strong> The U.S. government failed to consider the human cost when using powerful weapons to end wars, and should start doing so — because these weapons cause permanent environmental damage, devastate civilian communities, waste American resources, and damage the global reputation of the United States.</p>
+        </div>
+      </div>
+
+      <div class="anim">
+        <div class="conclusion-grid">
+          <div class="conc-card">
+            <div class="conc-card-label">Era 1 &nbsp;|&nbsp; 1914–1945</div>
+            <p><strong>Atomic Bombs</strong> killed up to 200,000 people, 90% of them civilians, and caused radiation illness for generations.</p>
+          </div>
+          <div class="conc-card">
+            <div class="conc-card-label">Era 2 &nbsp;|&nbsp; 1946–1990</div>
+            <p><strong>Agent Orange and Napalm</strong> poisoned over 3 million civilians, destroyed 5 million acres, and caused birth defects that continue today.</p>
+          </div>
+          <div class="conc-card">
+            <div class="conc-card-label">Era 3 &nbsp;|&nbsp; 1990–Present</div>
+            <p><strong>Drone Strikes</strong> killed at least 408,749 civilians. Only 2% of victims were actual high-level targets.</p>
+          </div>
+          <div class="conc-card">
+            <div class="conc-card-label">The Pattern</div>
+            <p>Across <strong>three different eras and three different types of weapons</strong>, the same failure repeated: civilian lives were not given enough weight.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="anim">
+        <div class="cta-box">
+          <p>The United States must begin to seriously consider the human cost before deploying powerful weapons. The damage does not end when the war ends. It affects civilians, communities, environments, and entire generations long after the last shot is fired. Counting the cost before acting is not weakness — it is wisdom.</p>
+        </div>
+      </div>
+
+      <div class="anim">
+        <p style="text-align:center; font-size: 0.8rem; color: var(--dim); font-family: Arial, sans-serif; letter-spacing: 0.08em;">U.S. History Fair &nbsp;|&nbsp; The Human Cost of Powerful Weapons</p>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- #deck -->
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dots   = document.querySelectorAll('.dot');
+  const btnPrev = document.getElementById('btn-prev');
+  const btnNext = document.getElementById('btn-next');
+  const counter = document.getElementById('slide-counter');
+  const bar     = document.getElementById('progress-bar');
+  const total   = slides.length;
+  let current   = 0;
+  let transitioning = false;
+
+  function goTo(idx) {
+    if (idx === current || transitioning) return;
+    transitioning = true;
+
+    const prev = slides[current];
+    const next = slides[idx];
+
+    prev.classList.add('exit-up');
+    prev.classList.remove('active');
+
+    setTimeout(() => {
+      prev.classList.remove('exit-up');
+      current = idx;
+      update();
+      next.classList.add('active');
+      transitioning = false;
+    }, 400);
+  }
+
+  function update() {
+    // counter
+    counter.textContent = (current + 1) + ' / ' + total;
+
+    // progress bar
+    bar.style.width = ((current + 1) / total * 100) + '%';
+
+    // dots
+    dots.forEach((d, i) => d.classList.toggle('current', i === current));
+
+    // arrows
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === total - 1;
+
+    // scroll inner to top
+    const inner = slides[current].querySelector('.slide-inner');
+    if (inner) inner.scrollTop = 0;
+  }
+
+  // Dot clicks
+  dots.forEach((d, i) => d.addEventListener('click', () => goTo(i)));
+
+  // Arrow clicks
+  btnPrev.addEventListener('click', () => goTo(current - 1));
+  btnNext.addEventListener('click', () => goTo(current + 1));
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      if (current < total - 1) goTo(current + 1);
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (current > 0) goTo(current - 1);
+    }
+  });
+
+  // Touch swipe
+  let touchStartX = 0;
+  let touchStartY = 0;
+  document.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 50) {
+      if (dx < 0 && current < total - 1) goTo(current + 1);
+      if (dx > 0 && current > 0) goTo(current - 1);
+    }
+  }, { passive: true });
+
+  // Init
+  update();
+</script>
+</body>
+</html>
