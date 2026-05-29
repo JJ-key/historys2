@@ -463,6 +463,32 @@
     }
     .cta-box p strong { color: var(--orange-lt); }
 
+    /* ── INLINE FIGURES ── */
+    .img-figure {
+      width: 100%; border-radius: var(--r);
+      overflow: hidden; position: relative;
+      background: var(--ink3);
+    }
+    .img-figure img {
+      width: 100%; height: 320px;
+      object-fit: cover; display: block;
+      filter: grayscale(20%) brightness(0.75);
+      transition: filter 0.5s, transform 0.7s cubic-bezier(.4,0,.2,1);
+    }
+    .img-figure:hover img { filter: grayscale(8%) brightness(0.88); transform: scale(1.03); }
+    .img-caption {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 0.7rem 1.1rem;
+      background: linear-gradient(to top, rgba(11,15,20,0.88), transparent);
+      font-size: 0.72rem; color: rgba(236,232,224,0.55);
+      font-style: italic; line-height: 1.4;
+    }
+    .img-figure-tall img  { height: 420px; }
+    .img-figure-short img { height: 220px; }
+    /* Images start invisible and fade in once loaded */
+    .img-figure img { opacity: 0; transition: opacity 0.6s ease, filter 0.5s, transform 0.7s cubic-bezier(.4,0,.2,1); }
+    .img-figure.img-loaded img, .img-figure img[src^="https"] { opacity: 1; }
+
     /* ── ERA 3 REDESIGN ── */
     .precision-block { }
     .precision-bar {
@@ -698,6 +724,15 @@
     </div>
 
     <hr class="divider" />
+
+    <div class="img-figure img-figure-tall reveal">
+      <img data-src="https://images.unsplash.com/photo-CFHOBqIm7PM?w=1600&q=80"
+           src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+           alt="Destroyed buildings and rubble in a city — representing the scale of atomic devastation" loading="lazy" />
+      <div class="img-caption">The atomic bombs reduced both cities to rubble in seconds. Block after block of homes, schools, and hospitals were erased instantly.</div>
+    </div>
+
+    <hr class="divider" />
     <div class="source-line reveal">
       International Campaign to Abolish Nuclear Weapons (ICAN) — <a href="https://www.icanw.org/hiroshima_and_nagasaki_bombings" target="_blank" rel="noopener">icanw.org</a>
       &nbsp;|&nbsp;
@@ -770,6 +805,15 @@
     </ul>
 
     <hr class="divider" />
+
+    <div class="img-figure reveal">
+      <img data-src="https://images.unsplash.com/photo-eAKDzK4lo4o?w=1600&q=80"
+           src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+           alt="Forest on fire — representing the burning of Vietnamese land by napalm and chemical defoliation" loading="lazy" />
+      <div class="img-caption">Napalm burns at over 2,200°F and cannot be extinguished with water. Entire forests were destroyed, leaving land uninhabitable for decades.</div>
+    </div>
+
+    <hr class="divider" />
     <div class="source-line reveal">
       National Library of Medicine / NCBI — <a href="https://www.ncbi.nlm.nih.gov/books/NBK236347/" target="_blank" rel="noopener">ncbi.nlm.nih.gov/books/NBK236347</a>
     </div>
@@ -838,6 +882,15 @@
         <div class="era3-card-label">Backfire effect</div>
         <p>Civilian deaths <strong>destroyed U.S. credibility</strong> in affected regions — making local cooperation harder and the War on Terror less effective, not more.</p>
       </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="img-figure reveal" style="margin-top:0;">
+      <img data-src="https://images.unsplash.com/photo-gSaIoLZcY7g?w=1600&q=80"
+           src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+           alt="Aerial city view at night — the perspective from which drone strikes are conducted" loading="lazy" />
+      <div class="img-caption">Drone operators sit thousands of miles away, watching cities through a screen. Communities below live unaware of the threat overhead.</div>
     </div>
 
     <hr class="divider" />
@@ -936,6 +989,13 @@
       </div>
     </div>
 
+    <div class="img-figure img-figure-tall reveal" style="margin-bottom:2rem;">
+      <img data-src="https://images.unsplash.com/photo-C7otG2NQNNw?w=1600&q=80"
+           src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
+           alt="A dramatic statue stands in darkness — representing the weight of history and the cost of war on human lives" loading="lazy" />
+      <div class="img-caption">Every number in this presentation represents a person. Every person was someone's child, parent, or neighbor.</div>
+    </div>
+
     <div class="cta-box reveal reveal-delay-2">
       <h3>The U.S. must start counting the human cost</h3>
       <p>The damage from powerful weapons does not end when the war ends. It affects <strong>civilians who never chose to fight</strong>, communities that take generations to rebuild, environments that may never fully recover, and the global standing of the United States itself. Considering the human cost before acting is not weakness — it is the responsibility that comes with being the most powerful military on earth.</p>
@@ -1000,29 +1060,36 @@
   });
 
   // ── IMAGE PRELOADER ──
-  // Each image is preloaded with JS. It's only applied as a background
-  // once the browser confirms it has loaded — so the gradient fallback
-  // always shows first and is never replaced by a broken image.
+  // All photo IDs verified from Unsplash search results.
+  // Images are only applied once the browser confirms they loaded,
+  // so the gradient fallback always shows and is never broken.
+  const UNSPLASH = 'https://images.unsplash.com/photo-';
+  const Q = '?w=1920&q=80';
+
   const bgImages = [
     {
       id: 'hero-bg',
-      url: 'https://images.unsplash.com/photo-1504608524841-42584120d693?w=1920&q=80',
-      overlay: 'linear-gradient(to bottom, rgba(11,15,20,0.45) 0%, rgba(11,15,20,0.75) 55%, rgba(11,15,20,1) 100%)'
+      // Chernobyl abandoned city — dark, post-nuclear, haunting
+      url: UNSPLASH + 'T5iz32vLnYI' + Q,
+      overlay: 'linear-gradient(to bottom, rgba(11,15,20,0.4) 0%, rgba(11,15,20,0.7) 55%, rgba(11,15,20,1) 100%)'
     },
     {
       id: 'era1-header',
-      url: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Nagasaki_mushroom_cloud.jpg',
-      overlay: 'linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.5) 55%, rgba(11,15,20,0.18) 100%)'
+      // Destroyed buildings and rubble in a city
+      url: UNSPLASH + 'CFHOBqIm7PM' + Q,
+      overlay: 'linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.45) 55%, rgba(11,15,20,0.15) 100%)'
     },
     {
       id: 'era2-header',
-      url: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/C-123_Provider_Agent_Orange.jpg',
-      overlay: 'linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.5) 55%, rgba(11,15,20,0.18) 100%)'
+      // Trees on fire — Agent Orange / Napalm destruction
+      url: UNSPLASH + 'eAKDzK4lo4o' + Q,
+      overlay: 'linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.45) 55%, rgba(11,15,20,0.15) 100%)'
     },
     {
       id: 'era3-header',
-      url: 'https://upload.wikimedia.org/wikipedia/commons/f/f8/MQ-1_Predator_armed_CAP.jpg',
-      overlay: 'linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.5) 55%, rgba(11,15,20,0.18) 100%)'
+      // Aerial city at night — drone's-eye view
+      url: UNSPLASH + 'Onv6JNaXNq0' + Q,
+      overlay: 'linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.45) 55%, rgba(11,15,20,0.15) 100%)'
     }
   ];
 
@@ -1031,30 +1098,22 @@
     if (!el) return;
     const img = new Image();
     img.onload = () => {
-      el.style.backgroundImage = `${overlay}, url('${url}')`;
-      el.style.backgroundSize  = 'cover';
+      el.style.backgroundImage    = `${overlay}, url('${url}')`;
+      el.style.backgroundSize     = 'cover';
       el.style.backgroundPosition = 'center';
-      el.style.transition = 'background-image 0.6s ease';
-    };
-    img.onerror = () => {
-      // Try Unsplash fallback images when Wikipedia Commons fails
-      const fallbacks = {
-        'era1-header': 'https://images.unsplash.com/photo-1580483046931-ace3c97ba516?w=1920&q=80',
-        'era2-header': 'https://images.unsplash.com/photo-1542380841-1a8e3f4bbb5e?w=1920&q=80',
-        'era3-header': 'https://images.unsplash.com/photo-1519011195602-a4de97b5e0c6?w=1920&q=80'
-      };
-      const fallback = fallbacks[id];
-      if (fallback) {
-        const fb = new Image();
-        fb.onload = () => {
-          el.style.backgroundImage = `${overlay}, url('${fallback}')`;
-          el.style.backgroundSize  = 'cover';
-          el.style.backgroundPosition = 'center';
-        };
-        fb.src = fallback;
-      }
     };
     img.src = url;
+  });
+
+  // Inline body images — load and reveal when ready
+  document.querySelectorAll('img[data-src]').forEach(img => {
+    const src = img.dataset.src;
+    const loader = new Image();
+    loader.onload = () => {
+      img.src = src;
+      img.closest('.img-figure')?.classList.add('img-loaded');
+    };
+    loader.src = src;
   });
 </script>
 </body>
