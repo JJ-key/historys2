@@ -106,17 +106,21 @@
     }
     #hero-bg {
       position: absolute; inset: 0;
-      background:
-        linear-gradient(to bottom, rgba(11,15,20,0.45) 0%, rgba(11,15,20,0.75) 55%, rgba(11,15,20,1) 100%),
-        url('https://images.unsplash.com/photo-1504608524841-42584120d693?w=1920&q=80') center/cover no-repeat;
       background-color: var(--ink3);
+      background-size: cover; background-position: center;
+    }
+    #hero-bg::before {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(11,15,20,0.45) 0%, rgba(11,15,20,0.75) 55%, rgba(11,15,20,1) 100%);
+      z-index: 1;
     }
     #hero-bg::after {
       content: '';
       position: absolute; inset: 0;
       background: radial-gradient(ellipse 70% 70% at 50% 40%, rgba(212,112,58,0.07) 0%, transparent 65%);
+      z-index: 2;
     }
-    #hero-content { position: relative; max-width: 860px; }
+    #hero-content { position: relative; z-index: 3; max-width: 860px; }
 
     .hero-tag {
       display: inline-block;
@@ -264,10 +268,10 @@
       width: 100%; height: 58vh; min-height: 340px;
       position: relative; overflow: hidden;
       display: flex; align-items: flex-end;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background-size: cover; background-position: center; background-repeat: no-repeat;
       background-color: var(--ink3);
+      /* gradient fallback — visible when photo hasn't loaded */
+      background-image: linear-gradient(135deg, var(--ink4) 0%, var(--ink2) 100%);
     }
     .era-header-overlay {
       position: absolute; inset: 0;
@@ -459,6 +463,76 @@
     }
     .cta-box p strong { color: var(--orange-lt); }
 
+    /* ── ERA 3 REDESIGN ── */
+    .precision-block { }
+    .precision-bar {
+      display: flex; height: 70px;
+      border-radius: var(--r-sm); overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .precision-seg {
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.18rem; padding: 0 1rem;
+    }
+    .precision-target {
+      width: 80px; flex-shrink: 0;
+      background: rgba(200,150,58,0.22);
+      border-right: 2px solid var(--gold);
+    }
+    .precision-civilian {
+      flex: 1;
+      background: rgba(192,64,64,0.13);
+      border-left: none;
+    }
+    .precision-seg-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700; line-height: 1;
+    }
+    .precision-target .precision-seg-num   { font-size: 1.25rem; color: var(--gold); }
+    .precision-civilian .precision-seg-num { font-size: 2rem;    color: var(--red);  }
+    .precision-seg-label { font-size: 0.67rem; letter-spacing: 0.08em; }
+    .precision-target .precision-seg-label   { color: rgba(200,150,58,0.7); }
+    .precision-civilian .precision-seg-label { color: var(--muted); }
+
+    .era3-number {
+      text-align: center; padding: 3rem 2rem;
+      background: linear-gradient(135deg, var(--ink2), var(--ink3));
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg); position: relative; overflow: hidden;
+    }
+    .era3-number::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 100%, rgba(192,64,64,0.1) 0%, transparent 70%);
+    }
+    .era3-big-num {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 9vw, 7rem); font-weight: 900;
+      color: var(--red); line-height: 1; display: block; position: relative;
+    }
+    .era3-num-label {
+      font-size: clamp(0.88rem, 1.5vw, 1.04rem);
+      color: var(--muted); margin-top: 0.4rem;
+      display: block; position: relative;
+    }
+    .era3-num-note {
+      font-size: 0.82rem; color: rgba(138,144,153,0.55);
+      margin: 0.6rem auto 0; max-width: 460px; line-height: 1.5; position: relative;
+    }
+    .era3-impacts { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; }
+    @media (max-width: 680px) { .era3-impacts { grid-template-columns: 1fr; } }
+    .era3-card {
+      background: var(--ink3); border: 1px solid var(--border);
+      border-top: 2px solid var(--gold);
+      padding: 1.4rem 1.5rem; border-radius: var(--r);
+    }
+    .era3-card-label {
+      font-size: 0.67rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600; margin-bottom: 0.6rem;
+    }
+    .era3-card p { font-size: 0.9rem; color: var(--muted); line-height: 1.7; }
+    .era3-card p strong { color: var(--cream); }
+
     /* ── FOOTER ── */
     footer {
       background: var(--ink2); border-top: 1px solid var(--border);
@@ -571,7 +645,7 @@
 <!-- ═══ ERA 1 — ATOMIC BOMBS ═══ -->
 <section id="era1" class="era-section">
 
-  <div class="era-header" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/b/b5/Nagasaki_mushroom_cloud.jpg')">
+  <div class="era-header" id="era1-header">
     <div class="era-header-overlay"></div>
     <div class="era-header-content">
       <div class="era-tag orange reveal">Era 01 &nbsp;|&nbsp; 1914 – 1945</div>
@@ -636,8 +710,8 @@
 <!-- ═══ ERA 2 — VIETNAM ═══ -->
 <section id="era2" class="era-section">
 
-  <div class="era-header" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/c/ca/Digging_Up_Unexploded_Bombs%2C_Vietnam.jpg'); background-position: center 40%;">
-    <div class="era-header-overlay" style="background: linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.55) 55%, rgba(11,15,20,0.25) 100%);"></div>
+  <div class="era-header" id="era2-header">
+    <div class="era-header-overlay"></div>
     <div class="era-header-content">
       <div class="era-tag sky reveal">Era 02 &nbsp;|&nbsp; 1946 – 1990</div>
       <h2 class="reveal reveal-delay-1">Agent Orange and Napalm in Vietnam</h2>
@@ -706,8 +780,8 @@
 <!-- ═══ ERA 3 — DRONE STRIKES ═══ -->
 <section id="era3" class="era-section">
 
-  <div class="era-header" style="background-image: url('https://upload.wikimedia.org/wikipedia/commons/f/f8/MQ-1_Predator_armed_CAP.jpg')">
-    <div class="era-header-overlay" style="background: linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.55) 55%, rgba(11,15,20,0.2) 100%);"></div>
+  <div class="era-header" id="era3-header">
+    <div class="era-header-overlay"></div>
     <div class="era-header-content">
       <div class="era-tag gold reveal">Era 03 &nbsp;|&nbsp; 1990 – Present</div>
       <h2 class="reveal reveal-delay-1">Drone Strikes During the War on Terror</h2>
@@ -718,37 +792,58 @@
   <div class="era-body">
 
     <p class="body-text reveal" style="max-width:760px;">
-      After the September 11, 2001 terrorist attacks, the United States launched the War on Terror. To hunt terrorist leaders in remote regions, the U.S. military used drone strikes — unmanned aircraft that fire missiles from high altitude. The U.S. called them precise and modern. The data tells a completely different story.
+      After the September 11, 2001 terrorist attacks, the United States launched the War on Terror. To hunt terrorist leaders in remote regions, the U.S. military used drone strikes — unmanned aircraft that fire missiles from thousands of feet in the air. The U.S. called them precise and surgical. The data tells a completely different story.
     </p>
 
     <hr class="divider" />
 
-    <div class="hero-stat-block reveal reveal-delay-1">
-      <span class="hero-stat"><span class="count-up" data-target="408749">0</span></span>
-      <p class="hero-stat-label">Minimum civilian deaths during the War on Terror</p>
-      <p class="body-text" style="max-width:520px; margin: 0.8rem auto 0; text-align:center; font-size:0.87rem;">
-        This figure from Brown University's Costs of War Project is the documented minimum. The true number is likely higher.
-      </p>
+    <!-- PRECISION MYTH VISUAL -->
+    <div class="precision-block reveal reveal-delay-1">
+      <p class="section-label gold" style="margin-bottom:0.45rem;">The Precision Myth</p>
+      <p class="body-text" style="margin-bottom:1rem; max-width:640px;">For every 100 people killed by drone strikes, this is how many were the intended high-level target — and how many were not:</p>
+      <div class="precision-bar">
+        <div class="precision-seg precision-target">
+          <span class="precision-seg-num">2%</span>
+          <span class="precision-seg-label">Targets</span>
+        </div>
+        <div class="precision-seg precision-civilian">
+          <span class="precision-seg-num">98%</span>
+          <span class="precision-seg-label">Not the intended target</span>
+        </div>
+      </div>
     </div>
 
     <hr class="divider" />
 
-    <div class="two-col reveal reveal-delay-2">
-      <div>
-        <div class="rule gold" style="margin-bottom:1.2rem;"></div>
-        <ul class="points gold">
-          <li><strong>Only 2% of drone strike victims</strong> were actual high-level militant leaders — the people the strikes were designed to eliminate.</li>
-          <li>The other <strong>98% of victims</strong> were not the intended target. Many were ordinary civilians.</li>
-          <li>Strikes hit <strong>wedding parties, funerals, markets, and homes</strong>, not just military compounds.</li>
-          <li><strong>Communities live in constant fear</strong> from drones overhead. Psychological damage extends far beyond those physically harmed.</li>
-        </ul>
+    <!-- BIG NUMBER -->
+    <div class="era3-number reveal reveal-delay-2">
+      <span class="era3-big-num"><span class="count-up" data-target="408749">0</span></span>
+      <span class="era3-num-label">minimum civilian deaths during the War on Terror</span>
+      <p class="era3-num-note">From Brown University's Costs of War Project — the documented minimum. The true number is likely much higher.</p>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- THREE IMPACT CARDS -->
+    <div class="era3-impacts reveal reveal-delay-3">
+      <div class="era3-card">
+        <div class="era3-card-label">Who was killed</div>
+        <p>Strikes hit <strong>wedding parties, funerals, markets, and homes</strong> — not only military compounds. Ordinary people going about their lives became casualties.</p>
       </div>
-      <div>
-        <div class="callout gold">
-          <p>Modern technology did not solve the problem of civilian casualties. Even in the 21st century — with satellite guidance and precision engineering — the U.S. continued to kill hundreds of thousands of civilians without adequate planning for the human cost.</p>
-        </div>
-        <p class="body-text" style="margin-top:1rem;">Destroying the U.S. reputation in these regions made it harder to gain local cooperation — making the War on Terror less effective, not more.</p>
+      <div class="era3-card">
+        <div class="era3-card-label">Psychological damage</div>
+        <p>Communities under drone coverage live with <strong>aircraft circling overhead for months</strong> at a time. The fear and trauma extends far beyond those physically harmed.</p>
       </div>
+      <div class="era3-card">
+        <div class="era3-card-label">Backfire effect</div>
+        <p>Civilian deaths <strong>destroyed U.S. credibility</strong> in affected regions — making local cooperation harder and the War on Terror less effective, not more.</p>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <div class="callout gold reveal reveal-delay-4" style="max-width:700px;">
+      <p>Even in the 21st century — with satellite guidance and precision engineering — the U.S. continued to kill hundreds of thousands of civilians. Technology did not solve what planning refused to address.</p>
     </div>
 
     <hr class="divider" />
@@ -864,14 +959,14 @@
 </footer>
 
 <script>
-  // Progress bar
+  // ── PROGRESS BAR ──
   const bar = document.getElementById('progress');
   window.addEventListener('scroll', () => {
     const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight);
     bar.style.width = (pct * 100) + '%';
   }, { passive: true });
 
-  // Scroll reveals
+  // ── SCROLL REVEALS ──
   const revealObs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); }
@@ -879,7 +974,7 @@
   }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
   document.querySelectorAll('.reveal').forEach(el => revealObs.observe(el));
 
-  // Counter animations
+  // ── COUNTER ANIMATIONS ──
   function animateCount(el) {
     const target = parseInt(el.dataset.target, 10);
     const dur = 1800, start = performance.now();
@@ -896,12 +991,70 @@
   }, { threshold: 0.5 });
   document.querySelectorAll('.count-up').forEach(c => countObs.observe(c));
 
-  // Smooth scroll for nav links
+  // ── SMOOTH SCROLL ──
   document.querySelectorAll('a[href^="#"]').forEach(a => {
     a.addEventListener('click', e => {
       const t = document.querySelector(a.getAttribute('href'));
       if (t) { e.preventDefault(); t.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
     });
+  });
+
+  // ── IMAGE PRELOADER ──
+  // Each image is preloaded with JS. It's only applied as a background
+  // once the browser confirms it has loaded — so the gradient fallback
+  // always shows first and is never replaced by a broken image.
+  const bgImages = [
+    {
+      id: 'hero-bg',
+      url: 'https://images.unsplash.com/photo-1504608524841-42584120d693?w=1920&q=80',
+      overlay: 'linear-gradient(to bottom, rgba(11,15,20,0.45) 0%, rgba(11,15,20,0.75) 55%, rgba(11,15,20,1) 100%)'
+    },
+    {
+      id: 'era1-header',
+      url: 'https://upload.wikimedia.org/wikipedia/commons/b/b5/Nagasaki_mushroom_cloud.jpg',
+      overlay: 'linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.5) 55%, rgba(11,15,20,0.18) 100%)'
+    },
+    {
+      id: 'era2-header',
+      url: 'https://upload.wikimedia.org/wikipedia/commons/6/6a/C-123_Provider_Agent_Orange.jpg',
+      overlay: 'linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.5) 55%, rgba(11,15,20,0.18) 100%)'
+    },
+    {
+      id: 'era3-header',
+      url: 'https://upload.wikimedia.org/wikipedia/commons/f/f8/MQ-1_Predator_armed_CAP.jpg',
+      overlay: 'linear-gradient(to top, rgba(11,15,20,0.97) 0%, rgba(11,15,20,0.5) 55%, rgba(11,15,20,0.18) 100%)'
+    }
+  ];
+
+  bgImages.forEach(({ id, url, overlay }) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const img = new Image();
+    img.onload = () => {
+      el.style.backgroundImage = `${overlay}, url('${url}')`;
+      el.style.backgroundSize  = 'cover';
+      el.style.backgroundPosition = 'center';
+      el.style.transition = 'background-image 0.6s ease';
+    };
+    img.onerror = () => {
+      // Try Unsplash fallback images when Wikipedia Commons fails
+      const fallbacks = {
+        'era1-header': 'https://images.unsplash.com/photo-1580483046931-ace3c97ba516?w=1920&q=80',
+        'era2-header': 'https://images.unsplash.com/photo-1542380841-1a8e3f4bbb5e?w=1920&q=80',
+        'era3-header': 'https://images.unsplash.com/photo-1519011195602-a4de97b5e0c6?w=1920&q=80'
+      };
+      const fallback = fallbacks[id];
+      if (fallback) {
+        const fb = new Image();
+        fb.onload = () => {
+          el.style.backgroundImage = `${overlay}, url('${fallback}')`;
+          el.style.backgroundSize  = 'cover';
+          el.style.backgroundPosition = 'center';
+        };
+        fb.src = fallback;
+      }
+    };
+    img.src = url;
   });
 </script>
 </body>
