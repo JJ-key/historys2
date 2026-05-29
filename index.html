@@ -485,9 +485,6 @@
     }
     .img-figure-tall img  { height: 420px; }
     .img-figure-short img { height: 220px; }
-    /* Images start invisible and fade in once loaded */
-    .img-figure img { opacity: 0; transition: opacity 0.6s ease, filter 0.5s, transform 0.7s cubic-bezier(.4,0,.2,1); }
-    .img-figure.img-loaded img, .img-figure img[src^="https"] { opacity: 1; }
 
     /* ── ERA 3 REDESIGN ── */
     .precision-block { }
@@ -726,9 +723,9 @@
     <hr class="divider" />
 
     <div class="img-figure img-figure-tall reveal">
-      <img data-src="https://images.unsplash.com/photo-CFHOBqIm7PM?w=1600&q=80"
-           src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-           alt="Destroyed buildings and rubble in a city — representing the scale of atomic devastation" loading="lazy" />
+      <img src="https://images.unsplash.com/photo-CFHOBqIm7PM?w=1600&q=80"
+           alt="Destroyed buildings and rubble in a city — representing the scale of atomic devastation"
+           loading="lazy" onerror="this.closest('.img-figure').style.display='none'" />
       <div class="img-caption">The atomic bombs reduced both cities to rubble in seconds. Block after block of homes, schools, and hospitals were erased instantly.</div>
     </div>
 
@@ -807,9 +804,9 @@
     <hr class="divider" />
 
     <div class="img-figure reveal">
-      <img data-src="https://images.unsplash.com/photo-eAKDzK4lo4o?w=1600&q=80"
-           src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-           alt="Forest on fire — representing the burning of Vietnamese land by napalm and chemical defoliation" loading="lazy" />
+      <img src="https://images.unsplash.com/photo-eAKDzK4lo4o?w=1600&q=80"
+           alt="Forest on fire — representing the burning of Vietnamese land by napalm and chemical defoliation"
+           loading="lazy" onerror="this.closest('.img-figure').style.display='none'" />
       <div class="img-caption">Napalm burns at over 2,200°F and cannot be extinguished with water. Entire forests were destroyed, leaving land uninhabitable for decades.</div>
     </div>
 
@@ -887,9 +884,9 @@
     <hr class="divider" />
 
     <div class="img-figure reveal" style="margin-top:0;">
-      <img data-src="https://images.unsplash.com/photo-gSaIoLZcY7g?w=1600&q=80"
-           src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-           alt="Aerial city view at night — the perspective from which drone strikes are conducted" loading="lazy" />
+      <img src="https://images.unsplash.com/photo-gSaIoLZcY7g?w=1600&q=80"
+           alt="Aerial city view at night — the perspective from which drone strikes are conducted"
+           loading="lazy" onerror="this.closest('.img-figure').style.display='none'" />
       <div class="img-caption">Drone operators sit thousands of miles away, watching cities through a screen. Communities below live unaware of the threat overhead.</div>
     </div>
 
@@ -990,9 +987,9 @@
     </div>
 
     <div class="img-figure img-figure-tall reveal" style="margin-bottom:2rem;">
-      <img data-src="https://images.unsplash.com/photo-C7otG2NQNNw?w=1600&q=80"
-           src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs="
-           alt="A dramatic statue stands in darkness — representing the weight of history and the cost of war on human lives" loading="lazy" />
+      <img src="https://images.unsplash.com/photo-C7otG2NQNNw?w=1600&q=80"
+           alt="A dramatic statue stands in darkness — representing the weight of history and the cost of war on human lives"
+           loading="lazy" onerror="this.closest('.img-figure').style.display='none'" />
       <div class="img-caption">Every number in this presentation represents a person. Every person was someone's child, parent, or neighbor.</div>
     </div>
 
@@ -1105,16 +1102,6 @@
     img.src = url;
   });
 
-  // Inline body images — load and reveal when ready
-  document.querySelectorAll('img[data-src]').forEach(img => {
-    const src = img.dataset.src;
-    const loader = new Image();
-    loader.onload = () => {
-      img.src = src;
-      img.closest('.img-figure')?.classList.add('img-loaded');
-    };
-    loader.src = src;
-  });
 </script>
 </body>
 </html>
